@@ -1,17 +1,13 @@
-module.exports = ((db) => {
-    const getById = (id) => {
-        const account = db.accounts.findById(id);
-
-        if (account === null) {
-            throw {
-                code: 404,
-                message: `Could not find an account matching id: ${id}`
-            };
-        }
-
+module.exports = ((database) => {
+    const mapAccount = (entity) => {
         return {
-            email: account.email
+            email: entity.email
         };
+    };
+
+    const getById = (id) => {
+        return database.accounts.findById(id)
+            .then(account => mapAccount(account));
     };
 
     return {

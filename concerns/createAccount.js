@@ -1,15 +1,12 @@
-const CreateAccount = ((db) => {
-    const create = (model) => {
-        db.accounts.insert(model);
+module.exports = ((database) => {
+    return (model) => {
+        const entity = {
+            email: model.email,
+            password: model.password,
+            dateCreated: new Date()
+        };
 
-        return Promise.resolve({
-            id: model.id
-        });
-    };
-
-    return {
-        create
+        return database.accounts.insert(entity)
+            .then(_ => ({id: entity.id}));
     };
 });
-
-module.exports = CreateAccount;

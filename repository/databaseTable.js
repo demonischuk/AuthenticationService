@@ -3,49 +3,55 @@ module.exports = function (tableName) {
     let primaryKeyId = 1;
 
     this.findById = (id) => {
-        console.log(`Lookup by id ${id}`);
-        const matches = data.filter(x=>x.id === id);
-console.log("Find by id matches", matches);
-        return matches.length === 1 ? matches[0] : null;
+        const matches = data.filter(x => x.id === id);
+
+        if (matches.length === 1) {
+            return Promise.resolve(matches[0]);
+        }
+
+        return Promise.reject({
+            code: 404,
+            message: `Could not find a record in table ${tableName} matching id ${id}`
+        });
     };
-    
+
     this.insert = (model) => {
         model.id = primaryKeyId;
 
         data.push(model);
 
         primaryKeyId++;
-        console.log(`Inserted into table ${tableName}`, model);
 
-        return model;
+        return Promise.resolve();
     };
 
     this.delete = (id) => {
         const updatedCollection = data.filter(x => typeof id === "object" ? x !== id : x.id != id);
 
         if (updatedCollection.length === data.length) {
-            throw {
+            return Promise.reject({
                 code: 404,
                 message: `Could not delete record ${(typeof id === "object" ? id.id : id)} from table ${tableName} because it does not exist`
-            };
+            });
         }
 
-        console.log(`Deleted from table ${tableName}`, id);
-
         data = updatedCollection;
+
+        return Promise.resolve();
     };
 
     this.update = (model) => {
         const matches = data.filter(x => x.id === model.id);
 
-        if (matches.length === 1) {
-            data[data.indexOf(matches[0])] = model;
-            console.log(`Updated record in table ${tableName}`, model);
-        } else {
-            throw {
+        if (matches.length !== 1) {
+            return Promise.reject({
                 code: 404,
                 message: `Could not update record ${model.id} in table ${tableName} because it does not exist`
-            };
+            });
         }
+
+        data[data.indexOf(matches[0])] = model;
+
+        return Promise.resolve();
     };
 };

@@ -1,6 +1,8 @@
 const express = require("express");
 
-module.exports = ((diFactory) => {
+module.exports = ((concerns) => {
+    const responseHandler = concerns.responseHandler;
+
     const router = express.Router();
 
     router.route("/accounts")
@@ -8,8 +10,7 @@ module.exports = ((diFactory) => {
             return res.sendStatus(501);
         })
         .post((req, res) => {
-            return diFactory.createAccount.create(req.body)
-            .then(createAccountResponse => res.status(201).send(createAccountResponse), err => res.sendStatus(500));
+            return responseHandler.handle(res, concerns.createAccount(req.body));
         });
 
     router.route("/accounts/:id")
@@ -20,17 +21,14 @@ module.exports = ((diFactory) => {
                 return res.status(400).send("Id is invalid");
             }
 
-            try {
-                return res.status(200).send(diFactory.lookupAccounts.getById(id));
-            } catch (ex) {
-                console.log(ex);
-                return res.status(ex.code).send(ex.message);
-            }
+            return responseHandler.handle(res, concerns.lookupAccounts.getById(id));
         });
 
     router.route("/accounts/:id/password")
         .patch((req, res) => {
-            return res.sendStatus(501);
+            const id = parseInt(req.params.id);
+
+            return responseHandler.handle(res, concerns.updateAccount.updatePassword(id, req.body.password));
         });
 
     return router;
