@@ -1,6 +1,7 @@
 module.exports = ((database) => {
     const mapAccount = (entity) => {
         return {
+            id: entity.id,
             email: entity.email
         };
     };

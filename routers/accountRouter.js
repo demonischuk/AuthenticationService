@@ -10,7 +10,7 @@ module.exports = ((concerns) => {
             return res.sendStatus(501);
         })
         .post((req, res) => {
-            return responseHandler.handle(res, concerns.createAccount(req.body));
+            return responseHandler.handle(res, concerns.createAccount.create(req.body));
         });
 
     router.route("/accounts/:id")

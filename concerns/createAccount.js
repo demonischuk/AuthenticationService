@@ -1,5 +1,5 @@
 module.exports = ((database) => {
-    return (model) => {
+    const create =  (model) => {
         const entity = {
             email: model.email,
             password: model.password,
@@ -8,5 +8,9 @@ module.exports = ((database) => {
 
         return database.accounts.insert(entity)
             .then(_ => ({id: entity.id}));
+    };
+
+    return {
+        create
     };
 });
