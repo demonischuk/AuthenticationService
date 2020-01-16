@@ -15,6 +15,18 @@ module.exports = function (tableName) {
         });
     };
 
+    this.find = (criteria) => {
+        return Promise.resolve(data.filter(record => {
+            for (let key in criteria) {
+                if (typeof record[key] !== "undefined" && record[key] != criteria[key]) {
+                    return false;
+                }
+            }
+
+            return true;
+        }));
+    }
+
     this.insert = (model) => {
         model.id = primaryKeyId;
 

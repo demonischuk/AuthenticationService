@@ -5,6 +5,8 @@ module.exports = ((hashPassword, database) => {
                 return {
                     email: model.email,
                     password: hashedPassword,
+                    type: model.type,
+                    reference: model.reference,
                     dateCreated: new Date()
                 }
             })
