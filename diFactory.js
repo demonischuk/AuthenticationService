@@ -9,10 +9,11 @@ const hashPassword = require("./concerns/hashPassword")({
 const createAccount = require("./concerns/createAccount")(hashPassword, database);
 const lookupAccounts = require("./concerns/lookupAccounts")(database);
 const updateAccount = require("./concerns/updateAccount")(hashPassword, database);
+const loginAccount = require("./concerns/loginAccount")(hashPassword, database);
 
 module.exports = {
     createAccount,
     lookupAccounts,
     updateAccount,
-    responseHandler
+    loginAccount
 };

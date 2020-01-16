@@ -2,7 +2,9 @@ module.exports = ((database) => {
     const mapAccount = (entity) => {
         return {
             id: entity.id,
-            email: entity.email
+            email: entity.email,
+            type: entity.type,
+            reference: entity.reference
         };
     };
 

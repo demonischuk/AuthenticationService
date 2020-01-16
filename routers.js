@@ -1,5 +1,5 @@
 const express = require("express");
-const responseHandler = require("../common/responseHandler")();
+const responseHandler = require("./common/responseHandler")();
 
 module.exports = ((concerns) => {
     const router = express.Router();
@@ -28,6 +28,11 @@ module.exports = ((concerns) => {
             const id = parseInt(req.params.id);
 
             return responseHandler.handle(res, concerns.updateAccount.updatePassword(id, req.body.password));
+        });
+
+    router.route("/authentication/login")
+        .post((req, res) => {
+            return responseHandler.handle(res, concerns.loginAccount.login(req.body.username, req.body.password));
         });
 
     return router;

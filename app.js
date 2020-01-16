@@ -9,7 +9,7 @@ const app = express();
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
-app.use("/v1", require("./routers/accountRouter")(diFactory));
+app.use("/api", require("./routers")(diFactory));
 
 const port = settings.port || process.env.PORT || 3000;
 
