@@ -1,7 +1,5 @@
-const DatabaseTable = require("./databaseTable");
-
-module.exports = (() => {
+module.exports = ((DataStore) => {
     return {
-        accounts: new DatabaseTable("Accounts")
+        accounts: new DataStore("Accounts")
     };
 });

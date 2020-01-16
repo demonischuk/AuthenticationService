@@ -1,9 +1,14 @@
-const database = require("./repository/database")();
-const responseHandler = require("./common/responseHandler")();
+const settings = require("./appsettings.json");
+const DataStore = require("./common/repository/mockDataStore");
+const database = require("./repository/database")(DataStore);
 
-const createAccount = require("./concerns/createAccount")(database);
+const hashPassword = require("./concerns/hashPassword")({
+    hashSecret: settings.hashSecret
+});
+
+const createAccount = require("./concerns/createAccount")(hashPassword, database);
 const lookupAccounts = require("./concerns/lookupAccounts")(database);
-const updateAccount = require("./concerns/updateAccount")(database);
+const updateAccount = require("./concerns/updateAccount")(hashPassword, database);
 
 module.exports = {
     createAccount,

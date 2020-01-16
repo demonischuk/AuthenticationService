@@ -1,4 +1,4 @@
-module.exports = ((database) => {
+module.exports = ((hashPassword, database) => {
     const updateAccount = (id, logic) => {
         return database.accounts.findById(id)
             .then(account => {
@@ -9,7 +9,8 @@ module.exports = ((database) => {
     }
 
     const updatePassword = (id, newPassword) => {
-        return updateAccount(id, account => account.password = newPassword);
+        return hashPassword.hash(newPassword)
+            .then(hashedPassword => updateAccount(id, account => account.password = hashedPassword));
     };
 
     return {

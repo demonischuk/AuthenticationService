@@ -1,14 +1,14 @@
-const DatabaseTable = require("../repository/databaseTable");
+const DatabaseTable = require("../common/repository/mockDataStore");
+const Database = require("../repository/database");
+const hashPassword = require("../concerns/hashPassword")({
+    hashSecret: "midna"
+});
 const CreateAccount = require("../concerns/createAccount");
 const UpdateAccount = require("../concerns/updateAccount");
 
-const blankDatabase = () => {
-    return {
-        accounts: new DatabaseTable("accounts")
-    };
-};
+const blankDatabase = () => Database(DatabaseTable);
 const createTestAccount = (db) => {
-    const subject = CreateAccount(db);
+    const subject = CreateAccount(hashPassword, db);
 
     return subject.create({
         email: "andrew.bate@no.com",
@@ -19,7 +19,7 @@ const createTestAccount = (db) => {
 
 test("Update account password successfully", () => {
     const db = blankDatabase();
-    const subject = UpdateAccount(db);
+    const subject = UpdateAccount(hashPassword, db);
 
     expect.assertions(1);
 
@@ -28,7 +28,7 @@ test("Update account password successfully", () => {
             .then(_ => {
                 return db.accounts.findById(id)
                     .then(entity => {
-                        expect(entity.password).toBe("abc");
+                        expect(entity.password).toBe("6f08243b108807e62f89b508a8cd6aa2735faa1de61894ab5574cedd2275b008");
                     });
             }));
 });
